@@ -13,15 +13,18 @@ https://docs.djangoproject.com/en/3.0/ref/settings/
 import os
 from collections import namedtuple
 
+from dotenv import load_dotenv
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+load_dotenv('.env')
 
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '%_=)*0brqphx-9+g6kg2^^+$aneno1v(5cx=n1!3ft1@lo61)&'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -123,7 +126,8 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 TG_BOT = namedtuple('Bot', ['token', 'webhook_host', 'name', 'id'])
-TG_BOT.token = ...
-TG_BOT.webhook_host = ...
-TG_BOT.name = ...
-TG_BOT.id = ...
+TG_BOT.token = os.getenv('BOT_TOKEN')
+TG_BOT.webhook_host = os.getenv('HOST')
+r = requests.get(f'https://api.telegram.org/bot{TG_BOT.token}/getMe').json()
+TG_BOT.name = r['result']['username']
+TG_BOT.id = r['result']['id']
