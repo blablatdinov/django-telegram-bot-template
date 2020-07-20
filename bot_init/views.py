@@ -1,8 +1,13 @@
-from django.shortcuts import render
+from time import sleep
+
+from django.core.exceptions import PermissionDenied
+from django.http import HttpResponse
+from django.views.decorators.csrf import csrf_exempt
 import telebot
 
 from config.settings import TG_BOT
-from bot_init.views import registration_subscriber
+from bot_init.service import registration_subscriber
+from bot_init.utils import save_message
 
 
 token = TG_BOT.token

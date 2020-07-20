@@ -4,7 +4,7 @@ from django.db import models
 class Subscriber(models.Model):
     """ Модель подписчика бота """
     tg_chat_id = models.IntegerField(verbose_name="Идентификатор подписчика")
-    is_active = models.BooleanField(verbose_name="Подписан ли польователь на бота")
+    is_active = models.BooleanField(default=True, verbose_name="Подписан ли польователь на бота")
     comment = models.TextField(null=True)
 
     def __str__(self):
