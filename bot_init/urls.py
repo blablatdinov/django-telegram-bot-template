@@ -5,5 +5,5 @@ from bot_init.views import bot
 
 
 urlpatterns = [
-    path(f'{TG_BOT.webhook_host}/{TG_BOT.token}', bot)
+    path(f'{TG_BOT.token}', bot)
 ]

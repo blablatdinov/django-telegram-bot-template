@@ -14,6 +14,7 @@ import os
 from collections import namedtuple
 
 from dotenv import load_dotenv
+import requests
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -29,7 +30,7 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -129,5 +130,7 @@ TG_BOT = namedtuple('Bot', ['token', 'webhook_host', 'name', 'id'])
 TG_BOT.token = os.getenv('BOT_TOKEN')
 TG_BOT.webhook_host = os.getenv('HOST')
 r = requests.get(f'https://api.telegram.org/bot{TG_BOT.token}/getMe').json()
+if not r.get('ok'):
+    raise Except('Data in .env is not valid')
 TG_BOT.name = r['result']['username']
 TG_BOT.id = r['result']['id']
