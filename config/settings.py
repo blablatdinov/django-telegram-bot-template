@@ -15,6 +15,7 @@ from collections import namedtuple
 
 from dotenv import load_dotenv
 import requests
+from requests.exceptions import ConnectionError
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -129,8 +130,11 @@ STATIC_URL = '/static/'
 TG_BOT = namedtuple('Bot', ['token', 'webhook_host', 'name', 'id'])
 TG_BOT.token = os.getenv('BOT_TOKEN')
 TG_BOT.webhook_host = os.getenv('HOST')
-r = requests.get(f'https://api.telegram.org/bot{TG_BOT.token}/getMe').json()
-if not r.get('ok'):
-    raise Except('Data in .env is not valid')
-TG_BOT.name = r['result']['username']
-TG_BOT.id = r['result']['id']
+try:
+    r = requests.get(f'https://api.telegram.org/bot{TG_BOT.token}/getMe').json()
+    if not r.get('ok'):
+        raise Except('Data in .env is not valid')
+    TG_BOT.name = r['result']['username']
+    TG_BOT.id = r['result']['id']
+except ConnectionError:
+    pass
