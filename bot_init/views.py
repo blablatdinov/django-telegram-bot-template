@@ -12,14 +12,11 @@ from bot_init.utils import save_message
 
 token = TG_BOT.token
 tbot = telebot.TeleBot(TG_BOT.token)
-tbot.remove_webhook()
-sleep(1)
-web = tbot.set_webhook(f'{TG_BOT.webhook_host}/{TG_BOT.token}')
 
 
 @csrf_exempt
 def bot(request):
-    """ Обработчик пакетов от телеграмма """
+    """Обработчик пакетов от телеграмма"""
     if request.content_type == 'application/json':
         json_data = request.body.decode('utf-8')
         update = telebot.types.Update.de_json(json_data)
@@ -29,9 +26,9 @@ def bot(request):
         raise PermissionDenied
 
 
-@tbot.message_handler(commands=['start'])  # Обработчик команды старт
+@tbot.message_handler(commands=['start'])
 def start_handler(message):
-    """ Обработчик команды /start """
+    """Обработчик команды /start"""
     save_message(message)
-    registration_subscriber(message)
+    registration_subscriber(message.chat.id)
     ...
