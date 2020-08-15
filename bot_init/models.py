@@ -27,6 +27,7 @@ class Subscriber(models.Model):
     tg_chat_id = models.IntegerField(verbose_name="Идентификатор подписчика")
     is_active = models.BooleanField(default=True, verbose_name="Подписан ли польователь на бота")
     comment = models.TextField(null=True)
+    ref_info = models.CharField(max_length=128, verbose_name="Реферальный код", null=True)
 
     def __str__(self):
         str(self.tg_chat_id)
