@@ -1,5 +1,26 @@
 from django.db import models
 
+from bot_init.schemas import SUBSCRIBER_ACTIONS
+
+
+class Mailing(models.Model):
+    """Класс объеденяющий сообщения для удобного удаления при некорректной рассылке"""
+    pass
+
+
+class AdminMessage(models.Model):
+    """Административные сообщения"""
+    title = models.CharField(max_length=128, verbose_name='Навзвание')
+    text = models.TextField(verbose_name='Текст сообщения')
+    key = models.CharField(max_length=128, verbose_name='Ключ, по которому сообщение вызывается в коде')
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        verbose_name = 'Админитративное сообщение'
+        verbose_name_plural = 'Админитративные сообщения'
+
 
 class Subscriber(models.Model):
     """ Модель подписчика бота """
@@ -23,7 +44,34 @@ class Message(models.Model):
     chat_id = models.IntegerField(verbose_name="Идентификатор чата, в котором идет общение")
     text = models.TextField(null=True, verbose_name="Текст сообщения")
     json = models.TextField()
+    mailing = models.ForeignKey(Mailing, related_name='messages', on_delete=models.PROTECT, blank=True, null=True)
+
+    def __str__(self):
+        if self.from_user_id == TG_BOT.id:
+            return f'⬆ {self.text}'
+        else:
+            return f'⬇ {self.text}'
 
     class Meta:
         verbose_name = "Сообщение"
         verbose_name_plural = "Сообщения"
+
+
+class SubscriberAction(models.Model):
+    """
+    Действие подписчика
+    Нужно для того, чтобы удобно вести статистику, отслеживаем 3 варианта событий:
+     - Пользователь подписался
+     - Пользователь отписался
+     - Пользователь реактивировался
+    """
+    subscriber = models.ForeignKey(Subscriber, on_delete=models.CASCADE, verbose_name='Подписчик')
+    date_time = models.DateTimeField(auto_now_add=True, verbose_name='Дата/время')
+    action = models.CharField(max_length=16, choices=SUBSCRIBER_ACTIONS, verbose_name='Действие')
+
+    def __str__(self):
+        return f'{self.subscriber} {self.action}'
+
+    class Meta:
+        verbose_name = 'Действия пользователя'
+        verbose_name_plural = 'Действия пользователей'
