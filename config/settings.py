@@ -100,3 +100,15 @@ try:
     TG_BOT.id = r['result']['id']
 except ConnectionError:
     pass
+
+try:
+    if os.getenv('ADMINS') == '':
+        TG_BOT.admins = []
+    else:
+        TG_BOT.admins = [int(chat_id) for chat_id in os.getenv('ADMINS').split(',')]
+except ValueError:
+    print('Пожалуйста проверьте переменную ADMINS в файле .env')
+    exit()
+except AttributeError:
+    print('Пожалуйста проверьте переменную ADMINS в файле .env')
+    exit()

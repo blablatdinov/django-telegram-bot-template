@@ -1,3 +1,11 @@
-SECRET_KEY=
-BOT_TOKEN=
-HOST=
+export BOT_TOKEN=
+export SECRET_KEY=
+export HOST=
+export ADMINS=
+export DEBUG=
+
+# Example
+# SECRET_KEY=asdf
+# BOT_TOKEN=452230948:AAGgdTCXf8XGD6lkj9rQhoV4xrf5E
+# HOST=https://example.com
+# ADMINS=2314354,89248354
