@@ -1,10 +1,12 @@
 import time
 
 from telebot import TeleBot
+from telebot.apihelper import ApiException
 from django.conf import settings
 
 from bot_init.models import Subscriber
 from bot_init.schemas import Answer, SUBSCRIBER_ACTIONS
+from bot_init.utils import save_message
 
 
 def get_tbot_instance() -> TeleBot:
@@ -27,8 +29,7 @@ def check_user_status_by_typing(chat_id: int):
             sub.save(update_fields=['is_active'])
         return True
     except Exception as e:
-        if ('bot was blocked by the user' in str(e) or 'user is deactivated' in str(e)) and sub.is_active:
-            _subscriber_unsubscribed(sub.tg_chat_id)
+        service_api_exception(e)
 
 
 def count_active_users():
@@ -37,6 +38,25 @@ def count_active_users():
         if check_user_status_by_typing(sub.tg_chat_id):
             count += 1
     return count
+
+
+def service_api_exception(exception):
+    if ('bot was blocked by the user' in str(e) or 'user is deactivated' in str(e)) and sub.is_active:
+        _subscriber_unsubscribed(sub.tg_chat_id)
+
+
+def send_answer(answer: Answer, chat_id):
+    get_tbot_instance().send_message(chat_id, Answer.text)
+
+
+def do_mailing(data: dict):
+    for chat_id, text in data.items():
+        try:
+            answer = Answer(text)
+            message_instance = send_answer(answer, chat_id)
+            save_message(message_instance)
+        except ApiException as e:
+            service_api_exception(e)
 
 
 def create_action(subscriber: Subscriber, action: str):
