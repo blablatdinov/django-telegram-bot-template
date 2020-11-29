@@ -4,6 +4,7 @@ from collections import namedtuple
 from dotenv import load_dotenv
 import requests
 from requests.exceptions import ConnectionError
+from loguru import logger
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 load_dotenv('.env')
@@ -112,3 +113,8 @@ except ValueError:
 except AttributeError:
     print('Пожалуйста проверьте переменную ADMINS в файле .env')
     exit()
+
+
+logger.add(f"{BASE_DIR}/logs/in_data.log", filter=lambda record: record["extra"]["task"] == "write_in_data")
+logger.add(f"{BASE_DIR}/logs/out_data.log", filter=lambda record: record["extra"]["task"] == "write_out_data")
+logger.add(f"{BASE_DIR}/logs/app.log", filter=lambda record: record["extra"]["task"] == "app")
