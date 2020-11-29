@@ -30,7 +30,7 @@ class Subscriber(models.Model):
     ref_info = models.CharField(max_length=128, verbose_name="Реферальный код", null=True)
 
     def __str__(self):
-        str(self.tg_chat_id)
+        return str(self.tg_chat_id)
 
     class Meta:
         verbose_name = "Подписчик"
