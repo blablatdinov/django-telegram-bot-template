@@ -8,9 +8,9 @@ def tg_delete_messages(modeladmin, request, queryset):
 tg_delete_messages.short_description = "Удалить сообщения в телеграмм"
 
 
-@admin.register(Message):
+@admin.register(Message)
 class MessageAdmin(admin.ModelAdmin):
-    list_display = ("id", "key", "chat_id", "text", "date")
+    list_display = ("id", "chat_id", "text", "date")
     search_fields = ("text", "chat_id")
     actions = [tg_delete_messages]
 
