@@ -3,15 +3,16 @@ import time
 from telebot import TeleBot
 from telebot.apihelper import ApiException
 from django.conf import settings
+from loguru import logger
+from bot_init.utils import get_tbot_instance
 
 from bot_init.models import Subscriber
-from bot_init.schemas import Answer, SUBSCRIBER_ACTIONS
+from bot_init.schemas import SUBSCRIBER_ACTIONS
+from bot_init.services.answer import Answer
 from bot_init.utils import save_message
 
-
-def get_tbot_instance() -> TeleBot:
-    """Получаем экземпляр класса TeleBot для удобной работы с API"""
-    return TeleBot(settings.TG_BOT.token)
+log = logger.bind(task="app")
+tbot = get_tbot_instance()
 
 
 def registration_subscriber(chat_id: int):
@@ -23,7 +24,7 @@ def registration_subscriber(chat_id: int):
 def check_user_status_by_typing(chat_id: int):
     sub = get_subscriber_by_chat_id(chat_id)
     try:
-        get_tbot_instance().send_chat_action(sub.tg_chat_id, 'typing')
+        tbot.send_chat_action(sub.tg_chat_id, 'typing')
         if not sub.is_active:
             sub.is_active = True
             sub.save(update_fields=['is_active'])
@@ -46,7 +47,7 @@ def service_api_exception(exception):
 
 
 def send_answer(answer: Answer, chat_id):
-    get_tbot_instance().send_message(chat_id, Answer.text)
+    tbot.send_message(chat_id, Answer.text)
 
 
 def do_mailing(data: dict):
@@ -66,10 +67,12 @@ def create_action(subscriber: Subscriber, action: str):
 
 def update_webhook(host=f'{settings.TG_BOT.webhook_host}/{settings.TG_BOT.token}'):
     """Обновляем webhook"""
-    tbot = get_tbot_instance()
-    tbot.remove_webhook()
-    time.sleep(1)
-    tbot.set_webhook(host)
+    try:
+        tbot.remove_webhook()
+        res = tbot.set_webhook(host)
+        log.info("webhook updated successfully")
+    except ApiException as e:
+        log.error(e)
 
 
 def _subscriber_unsubscribed(chat_id: int):
