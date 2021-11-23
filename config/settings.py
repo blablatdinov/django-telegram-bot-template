@@ -1,42 +1,14 @@
-import os
-from collections import namedtuple
+from splitted_settings import include
 
-from dotenv import load_dotenv
-import requests
-from requests.exceptions import ConnectionError
-from loguru import logger
-
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-load_dotenv('.env')
-
-SECRET_KEY = os.getenv('SECRET_KEY')
-
-DEBUG = True
-
-ALLOWED_HOSTS = ['*']
-
-INSTALLED_APPS = [
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-
-    'bot_init'
-]
-
-MIDDLEWARE = [
-    'django.middleware.security.SecurityMiddleware',
-    'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
-    'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware',
-]
-
-ROOT_URLCONF = 'config.urls'
+include(
+    'splitted_settings/installed_apps.py',
+    'splitted_settings/middlewares.py',
+    'splitted_settings/environ.py',
+    'splitted_settings/boilerplate.py',
+    'splitted_settings/db.py',
+    'splitted_settings/bot.py',
+    'splitted_settings/logging.py',
+)
 
 TEMPLATES = [
     {
@@ -53,15 +25,6 @@ TEMPLATES = [
         },
     },
 ]
-
-WSGI_APPLICATION = 'config.wsgi.application'
-
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-    }
-}
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -89,32 +52,3 @@ USE_L10N = True
 USE_TZ = True
 
 STATIC_URL = '/static/'
-
-TG_BOT = namedtuple('Bot', ['token', 'webhook_host', 'name', 'id'])
-TG_BOT.token = os.getenv('BOT_TOKEN')
-TG_BOT.webhook_host = os.getenv('HOST')
-try:
-    r = requests.get(f'https://api.telegram.org/bot{TG_BOT.token}/getMe').json()
-    if not r.get('ok'):
-        raise Exception('Data in .env is not valid')
-    TG_BOT.name = r['result']['username']
-    TG_BOT.id = r['result']['id']
-except ConnectionError:
-    pass
-
-try:
-    if os.getenv('ADMINS') == '':
-        TG_BOT.admins = []
-    else:
-        TG_BOT.admins = [int(chat_id) for chat_id in os.getenv('ADMINS').split(',')]
-except ValueError:
-    print('Пожалуйста проверьте переменную ADMINS в файле .env')
-    exit()
-except AttributeError:
-    print('Пожалуйста проверьте переменную ADMINS в файле .env')
-    exit()
-
-
-logger.add(f"{BASE_DIR}/logs/in_data.log", filter=lambda record: record["extra"]["task"] == "write_in_data")
-logger.add(f"{BASE_DIR}/logs/out_data.log", filter=lambda record: record["extra"]["task"] == "write_out_data")
-logger.add(f"{BASE_DIR}/logs/app.log", filter=lambda record: record["extra"]["task"] == "app")

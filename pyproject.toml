@@ -10,6 +10,8 @@ Django = "^3.2.9"
 loguru = "^0.5.3"
 pyTelegramBotAPI = "^4.2.0"
 python-dotenv = "^0.19.2"
+django-environ = "^0.8.1"
+django-split-settings = "^1.1.0"
 
 [tool.poetry.dev-dependencies]
 flake8 = "3.9.1"
@@ -23,6 +25,7 @@ python-dateutil = "2.8.1"
 requests-mock = "^1.9.3"
 pytest-cov = "^3.0.0"
 flake8-cognitive-complexity = "^0.1.0"
+isort = "^5.10.1"
 
 [build-system]
 requires = ["poetry-core>=1.0.0"]
