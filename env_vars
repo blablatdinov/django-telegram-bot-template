@@ -1,11 +1,16 @@
-export BOT_TOKEN=
-export SECRET_KEY=
-export HOST=
-export ADMINS=
-export DEBUG=
+BOT_TOKEN=
+SECRET_KEY=
+HOST=
+ADMINS=
+DEBUG=
+DATABASE_URL=
 
 # Example
 # SECRET_KEY=asdf
 # BOT_TOKEN=452230948:AAGgdTCXf8XGD6lkj9rQhoV4xrf5E
 # HOST=https://example.com
 # ADMINS=2314354,89248354
+
+# DATABASE_URL=psql://almazilaletdinov@localhost:5432/qbot
+# or
+# DATABASE_URL=sqlite:///db.sqlite3

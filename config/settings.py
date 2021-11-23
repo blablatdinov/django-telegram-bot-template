@@ -1,4 +1,4 @@
-from splitted_settings import include
+from split_settings.tools import include
 
 include(
     'splitted_settings/installed_apps.py',

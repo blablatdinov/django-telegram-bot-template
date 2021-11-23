@@ -12,6 +12,7 @@ pyTelegramBotAPI = "^4.2.0"
 python-dotenv = "^0.19.2"
 django-environ = "^0.8.1"
 django-split-settings = "^1.1.0"
+celery = "<5.0.0"
 
 [tool.poetry.dev-dependencies]
 flake8 = "3.9.1"
