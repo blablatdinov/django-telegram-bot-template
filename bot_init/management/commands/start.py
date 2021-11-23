@@ -7,9 +7,9 @@ log = logger.bind(task="app")
 
 
 class Command(BaseCommand):
-    """Команда для обновления хоста с консоли."""
+    """Команда для запуска бота в режиме long polling."""
 
-    help = 'command for update webhook'
+    help = 'command for start bot long polling mode'
 
     def handle(self, *args, **options):
         """Entrypoint."""

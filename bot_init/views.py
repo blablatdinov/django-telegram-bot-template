@@ -32,4 +32,3 @@ def start_handler(message):
     """Обработчик команды /start."""
     save_message(message)
     registration_subscriber(message.chat.id)
-    tbot.send_message(message.chat.id, 'hello')
