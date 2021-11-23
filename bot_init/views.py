@@ -11,7 +11,7 @@ from config.settings import TG_BOT
 token = TG_BOT.token
 tbot = get_tbot_instance()
 
-log = logger.bind(task="in_data")
+log = logger.bind(task="write_in_data")
 
 
 @csrf_exempt
@@ -32,4 +32,4 @@ def start_handler(message):
     """Обработчик команды /start."""
     save_message(message)
     registration_subscriber(message.chat.id)
-    ...
+    tbot.send_message(message.chat.id, 'hello')
