@@ -1,15 +1,12 @@
-"""
-Модуль, содержащий классы и функции для создания клавиатур.
-
-"""
+"""Модуль, содержащий классы и функции для создания клавиатур."""
 from telebot import types
 
 
 class InlineKeyboard:
-    """ Класс создающий клавиатуру над строкой ввода сообщений """
+    """Класс создающий клавиатуру над строкой ввода сообщений."""
 
     def get_lines(self, buttons):
-        """ Метод для получения строк """
+        """Метод для получения строк."""
         for line in buttons:
             buttons_line = []
             for button_text in line:
@@ -18,7 +15,7 @@ class InlineKeyboard:
             yield buttons_line
 
     def get_buttons(self, button_text):
-        """ Метод для получения кнопок """
+        """Метод для получения кнопок."""
         if isinstance(button_text, str):
             button = types.InlineKeyboardButton(text=button_text, callback_data=button_text)
         if isinstance(button_text, tuple):
@@ -26,7 +23,8 @@ class InlineKeyboard:
         return button
 
     def __init__(self, buttons):
-        """
+        """Конструктор класса.
+
         example = (
             (('button1', 'value1'), ('button2', 'value2')),
             (('button3', 'value3'),)
@@ -43,10 +41,11 @@ class InlineKeyboard:
 
 
 class Keyboard:
-    """ Класс создающий клавиатуру под строкой ввода сообщений """
+    """Класс создающий клавиатуру под строкой ввода сообщений."""
 
     def __init__(self, buttons):
-        """
+        """Конструктор класса.
+
         example = (
             ('button1', 'button2'),
             ('button3',)
@@ -58,7 +57,7 @@ class Keyboard:
             self.keyboard.add(*line)
 
     def get_lines(self, buttons):
-        """ Метод для получения строк """
+        """Метод для получения строк."""
         for line in buttons:
             buttons_line = []
             for button_text in line:
@@ -67,10 +66,11 @@ class Keyboard:
             yield buttons_line
 
     def get_buttons(self, button_text):
-        """ Метод для получения кнопок """
+        """Метод для получения кнопок."""
         button = types.KeyboardButton(button_text)
         return button
 
 
 def get_default_keyboard():
+    """Получить клавиатуру по умолчанию."""
     ...

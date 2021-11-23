@@ -10,11 +10,14 @@ tbot = get_tbot_instance()
 
 # TODO жирные методы
 class Answer:
+    """Класс ответа пользователю."""
+
     text = str
     keyboard = get_default_keyboard()
     chat_id: int
 
     def __init__(self, text, chat_id: int = None, keyboard=None, message_key=None):
+        """Конструктор класса."""
         self.text = text
         if keyboard is not None:
             self.keyboard = keyboard
@@ -23,6 +26,7 @@ class Answer:
         self.message_key = message_key
 
     def send(self, chat_id: int = None):
+        """Метод для отправки ответа."""
         from bot_init.utils import save_message
         if chat_id is None:
             chat_id = self.chat_id
@@ -30,7 +34,12 @@ class Answer:
             raise Exception("Не передан идентификатор чата")
         try:
             if self.keyboard:
-                message = tbot.send_message(chat_id=chat_id, text=self.text, reply_markup=self.keyboard, parse_mode="HTML")
+                message = tbot.send_message(
+                    chat_id=chat_id,
+                    text=self.text,
+                    reply_markup=self.keyboard,
+                    parse_mode="HTML",
+                )
                 save_message(message, message_key=self.message_key)
                 log.info(str(message))
                 return
@@ -41,6 +50,7 @@ class Answer:
             app_log.error(e)
 
     def edit(self, message_id: int, chat_id: int = None):
+        """Метод для редактирования сообщения."""
         from bot_init.utils import save_message
         if chat_id is None:
             chat_id = self.chat_id

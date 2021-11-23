@@ -1,18 +1,18 @@
 import json
 from datetime import datetime
 
-from django.utils.timezone import make_aware
 from django.conf import settings
+from django.utils.timezone import make_aware
 from loguru import logger
 from telebot import TeleBot
 
-from bot_init.models import Message
+from bot_init.models import Message, Subscriber
 
 log = logger.bind(task="app")
 
 
 def save_message(msg):
-    """ Сохранение сообщения от пользователя """
+    """Сохранение сообщения от пользователя."""
     date = make_aware(datetime.fromtimestamp(msg.date))
     from_user_id = msg.from_user.id
     message_id = msg.message_id
@@ -20,7 +20,8 @@ def save_message(msg):
     text = msg.text
     try:
         json_str = msg.json
-    except:
+    except Exception as e:
+        log.error(str(e))
         json_str = str(msg)
     json_text = json.dumps(json_str, indent=2, ensure_ascii=False)
     Message.objects.create(
@@ -28,8 +29,9 @@ def save_message(msg):
         chat_id=chat_id, text=text, json=json_text
     )
 
+
 def get_subscriber_by_chat_id(chat_id):
-    """Получить подписчика по идентификатору чата"""
+    """Получить подписчика по идентификатору чата."""
     try:
         subscriber = Subscriber.objects.get(tg_chat_id=chat_id)
         return subscriber
@@ -38,7 +40,7 @@ def get_subscriber_by_chat_id(chat_id):
 
 
 def get_tbot_instance() -> TeleBot:
-    """Получаем экземпляр класса TeleBot для удобной работы с API"""
+    """Получаем экземпляр класса TeleBot для удобной работы с API."""
     return TeleBot(settings.TG_BOT.token)
 
 
@@ -46,6 +48,6 @@ tbot = get_tbot_instance()
 
 
 def tg_delete_message(chat_id, message_id):
-    """Удалить сообщение в телеграм"""
+    """Удалить сообщение в телеграм."""
     tbot.delete_message(chat_id=chat_id, message_id=message_id)
     log.info(f"delete message (id: {message_id}, chat_id: {chat_id}")
