@@ -37,7 +37,7 @@ pyparsing==3.0.6; python_version >= "3.6"
 pytelegrambotapi==4.2.0
 pytest-cov==3.0.0; python_version >= "3.6"
 pytest-django==4.4.0; python_version >= "3.5"
-pytest==6.2.5; python_version >= "3.6"
+pytest==9.0.3; python_version >= "3.6"
 python-dateutil==2.8.2; (python_version >= "2.7" and python_full_version < "3.0.0") or (python_full_version >= "3.3.0")
 python-dotenv==0.19.2; python_version >= "3.5"
 python-utils==2.5.6
