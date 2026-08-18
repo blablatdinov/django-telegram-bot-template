@@ -19,7 +19,7 @@ progressbar2 = "4.6.0"
 ruff = "0.16.3"
 pytest = "9.1.1"
 pytest-django = "4.14.0"
-python-dateutil = "2.9.0"
+python-dateutil = "2.9.0.post0"
 requests-mock = "1.12.1"
 pytest-cov = "7.1.0"
 
